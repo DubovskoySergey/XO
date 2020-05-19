@@ -1,3 +1,4 @@
+#Функция приветствия пользователя
 def welcome():
     print("Добро пожаловать в игру Крестики-Нолики")
     while True:
@@ -14,6 +15,7 @@ def welcome():
     first_step = input("Кто будет ходить первым? im/io: ")
     return figure_player, figure_io, first_step
 
+# Функция печати игрового поля
 def print_field(field):
         t = "|___|___|___|"
         print("_ _ _ _ _ _")
@@ -22,6 +24,7 @@ def print_field(field):
                 print("_" +str(field[i][j]), end="_" + "|")
             print()
 
+# Функция основных игровых манипуляций
 def game(field, step, sel = ""):
     if sel != "":
         for i in range(len(field)):
@@ -32,23 +35,22 @@ def game(field, step, sel = ""):
         return field, step
     return field, step
 
-def step(first_step):
-    if first_step.lower() == "im":
-        while True:
-            try:
-                sel = int(input("select number: "))
-                if sel in range(1,10):
-                    break
-            except ValueError:
-                print("Выберите существующую ячейку.")
-        return sel
-    elif first_step.lower() == "io":
-        io()
+# Функция искуственного интелекта
+def io(field):
 
 
-def io():
-    pass
+# Функция хода
+def step():
+    while True:
+        try:
+            sel = int(input("select number: "))
+            if sel in range(1,10):
+                break
+        except ValueError:
+            print("Выберите существующую ячейку.")
+    return sel
 
+# Функция проверки победителя
 def check_win(player_step):
     win = 0
     win_comb = [[1,2,3], [4,5,6], [7,8,9],
@@ -61,7 +63,7 @@ def check_win(player_step):
         return win
     else:
         return win
-
+# Начало игры
 def start():
     field = [[1,2,3],[4,5,6],[7,8,9]]
     player_step = []
@@ -71,9 +73,11 @@ def start():
     print_field(field)
     win =  check_win(player_step)
     while win == 0:
-        sel = step(first_step)
-        field, player_step = game(field, player_step, sel)
-        print_field(field)
+        if first_step.lower() == "im":
+            sel = step(first_step)
+            field, player_step = game(field, player_step, sel)
+            io(field)
+            print_field(field)
         win =  check_win(player_step)
     print("Player win")
 
