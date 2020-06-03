@@ -1,21 +1,5 @@
-#Функция приветствия пользователя
-def welcome():
-    print("Добро пожаловать в игру Крестики-Нолики")
-    while True:
-        figure_io = None
-        figure_player = input("Выберите фигуру Х/О: ")
-        if figure_player == "x":
-            figure_io == "o"
-            break
-        elif figure_player == "o":
-            figure_io == "x"
-            break
-        else:
-            print("Неверная фигура.")
-    first_step = input("Кто будет ходить первым? im/io: ")
-    return figure_player, figure_io, first_step
+from random import randint
 
-# Функция печати игрового поля
 def print_field(field):
         t = "|___|___|___|"
         print("_ _ _ _ _ _")
@@ -24,61 +8,50 @@ def print_field(field):
                 print("_" +str(field[i][j]), end="_" + "|")
             print()
 
-# Функция основных игровых манипуляций
-def game(field, step, sel = ""):
-    if sel != "":
-        for i in range(len(field)):
-            for j in range(len(field[i])):
-                if field[i][j] == sel:
-                    field[i][j] = "X"
-                    step.append(sel)
-        return field, step
-    return field, step
+def user_tap(u_tap, field):
+    for i in range(len(field)):
+        for j in range(len(field[i])):
+            if int(u_tap) == field[i][j]:
+                field[i][j] = 'x'
+    list_user.add(int(u_tap))
+    return list_user, field
 
-# Функция искуственного интелекта
-def io(field):
-
-
-# Функция хода
-def step():
+def io_tap(list_user, list_io, field):
     while True:
-        try:
-            sel = int(input("select number: "))
-            if sel in range(1,10):
-                break
-        except ValueError:
-            print("Выберите существующую ячейку.")
-    return sel
+        io_t = randint(1,9)
+        if io_t not in list_user and io_t not in list_io:
+            break
+    for i in range(len(field)):
+        for j in range(len(field[i])):
+            if io_t == field[i][j]:
+                field[i][j] = '0'
+                list_io.add(io_t)
+    return list_io, field
 
-# Функция проверки победителя
-def check_win(player_step):
-    win = 0
-    win_comb = [[1,2,3], [4,5,6], [7,8,9],
-            [1,4,7], [2,5,8], [3,6,9],
-            [1,5,9], [3,5,7]]
-    for i in win_comb:
-        if sorted(player_step) == i:
-            win = 1
-    if win == 1:
-        return win
-    else:
-        return win
-# Начало игры
-def start():
-    field = [[1,2,3],[4,5,6],[7,8,9]]
-    player_step = []
-    io_step = []
-    win = None
-    figure_player, figure_io, first_step = welcome()
+def win(list_tap):
+    win_comb = [[1,2,3],[4,5,6],[7,8,9],[1,4,7],[2,5,8],[3,6,8],[1,5,9],[3,5,7]]
+    for comb in win_comb:
+        n = 0
+        for i in list_tap:
+            if i in comb:
+                n+=1
+        if n == 3:
+            break
+            return "win"
+
+
+list_user = set()
+list_io = set()
+field = [[1,2,3],[4,5,6],[7,8,9]]
+print_field(field)
+while True:
+    u_tap = input('Выберите поле: ')
+    list_user, field = user_tap(u_tap, field)
+    if win(list_user) == "win":
+        print("Player win!")
+        break
+    list_io, field = io_tap(list_user, list_io, field)
     print_field(field)
-    win =  check_win(player_step)
-    while win == 0:
-        if first_step.lower() == "im":
-            sel = step(first_step)
-            field, player_step = game(field, player_step, sel)
-            io(field)
-            print_field(field)
-        win =  check_win(player_step)
-    print("Player win")
-
-start()
+    if win(list_io) == "win":
+        print("IO win!")
+        break
