@@ -1,4 +1,6 @@
 from random import randint
+def welcome():
+    print("""Добро пожаловать в игру крестики нолики!""")
 
 def print_field(field):
         t = "|___|___|___|"
@@ -49,6 +51,7 @@ def win(list_tap):
 list_user = set()
 list_io = set()
 field = [[1,2,3],[4,5,6],[7,8,9]]
+welcome()
 print_field(field)
 while True:
     u_tap = user_input()
